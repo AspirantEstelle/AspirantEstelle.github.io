@@ -6,94 +6,125 @@ categories: 컴퓨터구조
 ---
 개인적으로 이해가 잘 안 돼서... 따로 공부해봄.
 
-### 데이터패스 구성요소
+## 데이터패스 구성요소
 
-1. Instruction Memory
+> - Instruction Memory  
+> 명령어 저장, 주어진 주소에 명령어 전송.
 
-명령어 저장, 주어진 주소에 명령어 전송.
+> - Program Counter(PC)  
+> 현 명령어의 주소를 지닌 레지스터.
 
-2. Program Counter(PC)
+> - Adder  
+> 알다시피... 덧셈기.  
+> PC를 다음 명령어 주소로 증가시킬 때 사용.  
+> PC + 4의 구조.
 
-현 명령어의 주소를 지닌 레지스터.
+## 프로세서 데이터패스의 3단계
 
-3. Adder
+> - Fetch stage  
+> Fetch stage는 현재 PC에 저장된 주소(즉, 다음 Instruction의 주소)에서 Instruction을 꺼내는 단계.  
+> 꺼낸 Instruction은 당연히 이진수의 기계어겠지.  
+> Fetch stage의 마지막 단계에서 PC = PC + 4를 진행한다.  
 
-알다시피... 덧셈기.
-PC를 다음 명령어 주소로 증가시킬 때 사용.
-PC + 4의 구조.
+> - Decode stage  
+> Decode stage는 전 단계에서 가져온 Instruction의 의미를 해독한다.  
+> 이 Inst가 어떤 동작인지, 무엇을 가지고 하는지, 어떻게 실행할지를 이해한다는 뜻이다.
 
-### 프로세서 데이터패스의 3단계
+> - Execute stage  
+> Execute stage라는 말에서 알 수 있듯, 실행하는 단계다.  
+> 레지스터에서 값을 읽어오고, ALU가 연산을 진행하고, 결과를 레지스터에 작성한다.
 
-1. Fetch stage
+## 문제발생 - 두 개의 다른 신호가 마주치면 어쩌지?
 
-Fetch stage는 현재 PC에 저장된 주소(즉, 다음 Instruction의 주소)에서 Instruction을 꺼내는 단계.
-꺼낸 Instruction은 당연히 이진수의 기계어겠지.
-Fetch stage의 마지막 단계에서 PC = PC + 4를 진행한다.
+CPU는 정밀하고 신속해야 하면서도 효율적인 구조를 가져야 한다.  
+그러니까 각 신호를 위해 경로를 하나하나 파서 할당해줄 수 없다는 뜻이야.  
 
-2. Decode stage
+도로를 여러 차가 같이 쓰다보면 언젠간 사고가 나는 것처럼, 신호 또한 그렇다.  
+충돌하면 굉장히 골치가 아파지는 점도 똑같아.  
+이것을 데이터 충돌, 혹은 경합 문제라고 한다.  
 
-Decode stage는 전 단계에서 가져온 Instruction의 의미를 해독한다.
-이 Inst가 어떤 동작인지, 무엇을 가지고 하는지, 어떻게 실행할지를 이해한다는 뜻이다.
+## 그래서 어떡함? - MUX
 
-3. Execute stage
-
-Execute stage라는 말에서 알 수 있듯, 실행하는 단계다.
-레지스터에서 값을 읽어오고, ALU가 연산을 진행하고, 결과를 레지스터에 작성한다.
-
-### 문제발생 - 두 개의 다른 신호가 마주치면 어쩌지?
-
-CPU는 정밀하고 신속해야 하면서도 효율적인 구조를 가져야 한다.
-그러니까 각 신호를 위해 경로를 하나하나 파서 할당해줄 수 없다는 뜻이야.
-
-도로를 여러 차가 같이 쓰다보면 언젠간 사고가 나는 것처럼, 신호 또한 그렇다.
-충돌하면 굉장히 골치가 아파지는 점도 똑같아.
-이것을 데이터 충돌, 혹은 경합 문제라고 한다.
-
-### 그래서 어떡함? - MUX
-
-MUX는 S 입력에 따라 A, B 2개의 입력 중 택일해 하나만 내뱉는다.
-S신호는 누가 주냐고? 당연히 CPU의 제어유닛이 준다.
+MUX는 S 입력에 따라 A, B 2개의 입력 중 택일해 하나만 내뱉는다.  
+S신호는 누가 주냐고? 당연히 CPU의 제어유닛이 준다.  
 이는 OPcode를 참조한다.
 
-### 데이터패스 구성요소 2가지 - Combinational element Vs. State element
+## 데이터패스 구성요소 2가지 - Combinational element Vs. State element
 
-전자는 현 *입력*에 대해서만 출력이 결정.
+전자는 현 **입력**에 대해서만 출력이 결정.
 
-후자는 현 *입력*과 *상태*에 대해 출력이 결정. (데이터 저장 목적)
+후자는 현 **입력**과 **상태**에 대해 출력이 결정. (데이터 저장 목적)
 
-### Clocking Methodology(클로킹 방법론)
+## Clocking Methodology(클로킹 방법론)
 
-이는 언제 신호를 쓰고 읽을지 결정한다.
+이는 언제 신호를 쓰고 읽을지 결정한다.  
 Edge-triggered clocking의 경우, 클럭이 0 → 1이 될 때 값을 갱신한다.
 
-## 데이터패스 구축 : R-포맷
 
-### 레지스터
+***
 
-#### input
+
+# 데이터패스 구축 : R-포맷
+
+## 레지스터
+
+### input
+
 * 4 = (2 read ports + 1 write port) + 1 data
 
-2 read ports : rs, rt
+2 read ports : rs, rt  
+1 write port : rd  
+1 data : ALU가 뱉는 결과
 
-1 write port : rd
+### output 
 
-1 data : 
-
-#### output 
 * 1 = Read 레지스터에 따른 32-bits 레지스터
 
-#### regwrite
+### regwrite
+
 * Cpu의 Controll Unit이 뿌리는 제어신호. 레지스터에 데이터를 쓸지 말지 결정.
 
-### ALU
+## ALU
 
-#### input
+### input
+
 * 2 = 32-bits 입력 2개
 
-#### output
+### output
+
 * 1 = 1-bit or 32bit
-결과가 0이면 1-bit 신호, 그 외면 레지스터의 write data(즉, data)가 되는 32-bits 신호
 
-## 데이터패스 구축 : I-포맷
+결과가 0이면 1-bit 신호  
+그 외면 레지스터의 write data(즉, data)가 되는 32-bits 신호
 
-아직 작성 중...
+***
+
+# 데이터패스 구축 : I-포맷
+
+## 데이터 메모리 유닛
+
+### input
+
+* 2 = 1 Address + 1 Write data
+
+### output
+
+* 1 = 1 Read data(From address)
+
+### MemWrite
+
+0 : Write data 무시.  
+1 : Write data 사용. 덮어씀.
+
+### MemRead
+
+0 : Read data 무시.  
+1 : Read data 사용. 읽음.  
+
+## 부호확장 유닛
+
+16-bits의 입력에서 MSB를 복제해 MSB 쪽으로 32-bits까지 확장.
+
+## lw의 경우
+
+## sw의 경우

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Github blog 구축 성공 축사"
-date:   2025-10-28 11:07:36
+date:   2025-10-28 11:07:36 +0900
 categories: Python
 ---
 반갑습니다.
