@@ -1,0 +1,61 @@
+---
+layout: post
+title:  "운영체제 - ch12"
+date:   2025-06-13 15:30:36 +0900
+categories: 운영체제, OS
+---
+CPU와 I/O 장치 간의 통신 방식은 2개로 나뉘어.
+
+## Direct I/O vs. Memory-Mapped I/O
+> - Direct I/O
+> 메모리와 I/O의 주소 공간이 완전 분리되어 있고, I/O를 위해선 별도의 특수 명령어가 필요해.
+> - Memory-Mapped I/O
+> 메모리와 I/O가 동일한 주소 공간을 공유해, 일반적인 메모리 읽기/쓰기 명령어를 통해 I/O를 제어한다.
+  
+I/O 장치가 작업을 완료했는지 알아보는 방법도 2개야.
+  
+## Polling vs. Interrupt
+> - Polling
+> CPU가 계속해서 I/O 장치에게 작업이 완료되었는지 물어보는 것.
+> - Interrupt
+> I/O 장치의 작업이 완료되면 CPU에 인터럽트를 거는 방식.
+  
+데이터 전송 방식에도 2개 방식이 있어...
+  
+## Programmed I/O vs. DMA(Direct Memory Access)
+> - Programmded I/O
+> 프로세서가 입출력 장치를 기다리며 데이터를 입출력하는 거야.
+> - DMA
+> I/O 장치가 CPU를 거치지 않고 직접 메모리에 데이터를 올리는 거야.
+  
+## I/O Device Controller
+> I/O 장치의 전자적 부분을 담당하는 친구야.
+> 음... 여러가지 역할이 있지만 넘어가자.
+> device controller code는 device-driver code보다 밑 단계에 있네.
+  
+## Goals of I/O Software
+> 운영체제가 I/O 시스템을 설계할 때 고려해야 할 목표!
+> - 장치독립성(Device independence)
+> - 균일한 명명(Uniform naming)
+> - 오류 처리(Error handling)
+> - 동기냐 비동기냐?(Synchronous vs. Asynchronous)
+> - 버퍼링(Buffering)
+> - 공용이냐 전용이냐?(Sharable vs. Dedicated devices)
+  
+이러한 목표들을 달성하기 위해 I/O 소프트웨어엔 여러 계층이 있기 마련이야.
+  
+### Interrupt Handlers
+> 하드웨어 인터럽트가 발생했을 때, Critical Actions, Noncritical Actions, Noncritical Deferred Actions를 나눠서 처리한대.
+
+### Device Drivers
+> 특정 I/O 하드웨어를 직접 제어하는 장치 종속적 코드.
+> 부팅 시 커널에 정적으로 연결되거나, 필요할 때 동적으로 로드될 수 있지.
+
+### Device-independent I/O Software
+> 드라이버들을 위한 균일한 인터페이스를 제공해.
+> Unix 계열은 사용자 프로세스가 open(), read() 따위의 동일한 시스템 콜을 통해 접근할 수 있게 하고.
+> 여러 섹터를 묶어 하나의 논리적 블록으로 다루거나, 버퍼링을 관리하거나, 오류를 보고하는 등... 뭐 그런 거. 인터페이스에서 할 법한 일을 하지.
+
+### User-level I/O Software
+> 사용자 프로그램에 직접 제공되는 라이브러리.
+> 프린터 따위를 다루는 Spooling도 여기서 동작해.
